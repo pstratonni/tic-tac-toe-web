@@ -1,0 +1,35 @@
+h1 {
+  font-size: 100px;
+}
+
+.off {
+  display: none;
+}
+.on {
+  display: block;
+}
+
+.initial-game {
+  background-color: gray;
+}
+
+.field {
+  display: grid;
+  width: 602px;
+  height: 602px;
+  border-radius: 50px;
+  overflow: hidden;
+  border: solid 1px wheat;
+}
+
+.cell {
+  width: 200px;
+  height: 200px;
+  border: solid 1px wheat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 96px;
+  color: tomato;
+  background-color: turquoise;
+}
