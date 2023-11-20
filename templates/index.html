@@ -2,18 +2,32 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <title>Tic-Tak-Toe</title>
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
     <h1>Tic-Tak-Toe</h1>
-    <div class="initial-game on">
+    <div class="initial-game">
       <h4>Create new game</h4>
       <button id="create-game">Create</button>
       <h4>List of games</h4>
       <ul class="game-list"></ul>
     </div>
-    <div class="game off">
+    <div class="game">
+      <div id="state">
+        <h5 class="state"></h5>
+        <h5 class="go"></h5>
+        <h5 class="enemy-state"></h5>
+      </div>
+      <div class="field"></div>
       <button class="finish">Finish</button>
     </div>
     <script src="/static/script.js"></script>

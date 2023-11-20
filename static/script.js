@@ -1,3 +1,6 @@
+let player;
+let enemy_player;
+
 const ws = new WebSocket("ws://127.0.0.1:8000/ws");
 
 ws.onopen = function (event) {
@@ -5,15 +8,25 @@ ws.onopen = function (event) {
 };
 
 ws.onmessage = function (event) {
-  let data = JSON.parse(event.data);
+  const data = JSON.parse(event.data);
   switch (data.action) {
     case "new":
+      console.log(data);
+      finishGame();
+      gameList(data.games);
       break;
     case "create":
-      initialGame(data.idx);
+      console.log(data);
+      initialGame(data.game, data.player);
+      renderField();
       break;
     case "join":
-      initialGame(data.game, (joined = "true"));
+      console.log(data);
+      initialGame(data.game, (player = false), (joined = "true"));
+      renderField();
+      startGame(data.player, data.enemy_player, data.active);
+      break;
+    case "move":
       break;
     case "break":
       finishGame();
@@ -24,7 +37,6 @@ ws.onmessage = function (event) {
 };
 
 const send = (data) => {
-  console.log(data);
   ws.send(JSON.stringify(data));
 };
 
@@ -34,6 +46,10 @@ const newUser = () => {
 
 const createGame = (event) => {
   send({ action: "create" });
+};
+
+const moveGame = (event) => {
+  send({ action: "move", cell: "" });
 };
 
 const joinGame = (event) => {
@@ -47,16 +63,17 @@ const gameList = (games) => {
   for (let i in games) {
     const li = `<li>Connection to <button id="game_${
       games[i]
-    }" class="game-button">Game #${i + 1}</button></li>`;
+    }" class="game-button">Game #${+i + 1}</button></li>`;
     gameList.innerHTML += li;
   }
+
   const buttons = document.querySelectorAll(".game-button");
   for (let button of buttons) {
     button.addEventListener("click", joinGame);
   }
 };
 
-const initialGame = (idx, joined = "false") => {
+const initialGame = (idx, player_state, joined = "false") => {
   const createField = document.querySelector(".initial-game");
   createField.classList.remove("on");
   createField.classList.add("off");
@@ -67,11 +84,19 @@ const initialGame = (idx, joined = "false") => {
 
   const finishButton = document.querySelector(".finish");
   finishButton.id = `finish_${joined}_${idx}`;
+
+  if (player_state) {
+    player =
+      player_state == "X"
+        ? '<i class="fas fa-times"></i>'
+        : '<i class="far fa-circle"></i>';
+    document.querySelector(".state").innerHTML = "";
+    document.querySelector(".state").innerHTML = `You go with ${player}`;
+  }
 };
 
 const breakGame = () => {
   const id = document.querySelector(".finish").id.split("_");
-  console.log(id);
   send({ action: "break", joined: id[1], game: id[2] });
 };
 
@@ -79,9 +104,52 @@ const finishGame = () => {
   const createField = document.querySelector(".initial-game");
   createField.classList.remove("off");
   createField.classList.add("on");
+
   const gameField = document.querySelector(".game");
   gameField.classList.remove("on");
   gameField.classList.add("off");
+};
+
+const renderField = () => {
+  field = document.querySelector(".field");
+  for (let i = 0; i < 9; i++) {
+    cell = document.createElement("div");
+    cell.id = `cell_${i}`;
+    cell.classList.add("cell");
+    field.appendChild(cell);
+  }
+};
+
+const startGame = (player_state, enemy_player_state, active) => {
+  player =
+    player_state == "X"
+      ? '<i class="fas fa-times"></i>'
+      : '<i class="far fa-circle"></i>';
+  enemy_player =
+    enemy_player_state == "X"
+      ? '<i class="fas fa-times"></i>'
+      : '<i class="far fa-circle"></i>';
+  const state = document.querySelector(".state");
+  state.innerHTML = "";
+  state.innerHTML = `You go with ${player}`;
+  const enemy_state = document.querySelector(".enemy-state");
+  enemy_state.innerHTML = "";
+  enemy_state.innerHTML = `Enemy go with ${enemy_player}`;
+  whoMove(active);
+  const cells = document.querySelectorAll(".cell");
+  for (let cell of cells) {
+    cell.addEventListener("click", handlerGo);
+  }
+};
+
+const whoMove = (active) => {
+  const go = document.querySelector(".go");
+  go.innerHTML = "";
+  go.innerHTML = active ? `You go (${player})` : `Enemy go (${enemy_player})`;
+};
+
+const handlerGo = (event) => {
+  console.log(event);
 };
 
 document.getElementById("create-game").addEventListener("click", createGame);
