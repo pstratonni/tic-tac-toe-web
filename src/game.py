@@ -45,7 +45,7 @@ class Game:
 
     async def toggle_current_player(self, ws: WebSocket):
         current_player = self.player_init \
-            if await self.player_init.get_ws() != ws else \
+            if not await self.player_init.check_ws(ws) else \
             self.player_att
         self.current_player = await current_player.get_ws()
         self.current_player_state = await current_player.get_state()
