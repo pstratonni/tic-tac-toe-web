@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from icecream import ic
 from starlette.websockets import WebSocket
 from enum import StrEnum
@@ -29,6 +31,22 @@ class Game:
     current_player: WebSocket = None
     current_player_state = State.CROSS
     active_game: bool = False
+    field_x: tuple[list[int, int, int], list[int, int, int], list[int, int, int]] = (
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0]
+    )
+    field_o: tuple[list[int, int, int], list[int, int, int], list[int, int, int]] = (
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0]
+    )
+    field: tuple[list[str, str, str], list[str, str, str], list[str, str, str]] = [
+        ['-', '-', '-'],
+        ['-', '-', '-'],
+        ['-', '-', '-'],
+    ]
+    steps: int = 0
 
     @classmethod
     async def create(cls, ws: WebSocket):
@@ -61,3 +79,42 @@ class Game:
 
     async def get_players(self) -> tuple[Player, Player]:
         return self.player_init, self.player_att
+
+    async def check_cell_availability(self, cell: list[str, str]) -> bool:
+        x = int(cell[0])
+        y = int(cell[1])
+        ic(id(self.field))
+        if self.field[x][y] == '-':
+            self.field[x][y] = self.current_player_state
+            return True
+        return False
+
+    async def move(self, cell: list[str, str]) -> None:
+        x = int(cell[0])
+        y = int(cell[1])
+        field = self.field_x if self.current_player_state == State.CROSS else self.field_o
+        field[0][x] += 1
+        field[1][y] += 1
+        if x == y == 1:
+            field[2][0] = +1
+            field[2][1] = +1
+            ic(field[2][0])
+        elif x == y:
+            field[2][0] = +1
+            ic(field[2][0])
+        elif (x == 2 and y == 0) or (x == 0 and y == 2):
+            field[2][1] = +1
+        self.steps += 1
+
+    async def check_winner(self) -> tuple[bool, tuple[int, int] | None]:
+        field_winner = self.field_x if self.current_player_state == State.CROSS else self.field_o
+        for row in field_winner:
+            if 3 in row:
+                line_winner = (field_winner.index(row), row.index(3))
+                return True, line_winner
+        return False, None
+
+    async def check_draw(self) -> bool:
+        if self.steps == 9:
+            return True
+        return False

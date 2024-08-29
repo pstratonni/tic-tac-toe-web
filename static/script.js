@@ -26,14 +26,25 @@ ws.onmessage = function (event) {
       startGame(data.player, data.enemy_player, data.active);
       break;
     case "move":
+      rerenderField(data.field);
       moveGame(data.cell, data.active);
+      whoMove();
       break;
     case "break":
       finishGame();
       gameList(data.games);
-    case 'err':
-      console.log(data.msg)
-      break
+    case "err":
+      console.log(data.msg);
+      break;
+    case "draw":
+      rerenderField(data.field);
+      moveGame(data.cell, data.active);
+      whoMove("draw");
+      break;
+    case "win":
+      rerenderField(data.field);
+      whoMove(`Win ${data.winner}`);
+      removeListener();
     default:
       break;
   }
@@ -116,11 +127,13 @@ const finishGame = () => {
 
 const renderField = () => {
   field = document.querySelector(".field");
-  for (let i = 0; i < 9; i++) {
-    cell = document.createElement("div");
-    cell.id = `cell_${i}`;
-    cell.classList.add("cell");
-    field.appendChild(cell);
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      cell = document.createElement("div");
+      cell.id = `cell_${i}_${j}`;
+      cell.classList.add("cell");
+      field.appendChild(cell);
+    }
   }
 };
 
@@ -140,16 +153,20 @@ const startGame = (player_state, enemy_player_state, active) => {
   const enemy_state = document.querySelector(".enemy-state");
   enemy_state.innerHTML = "";
   enemy_state.innerHTML = `Enemy go with ${enemy_player}`;
-  whoMove(active);
+  whoMove();
   const cells = document.querySelectorAll(".cell");
   for (let cell of cells) {
     cell.addEventListener("click", handlerGo);
   }
 };
 
-const whoMove = () => {
+const whoMove = (msg = "") => {
   const go = document.querySelector(".go");
   go.innerHTML = "";
+  if (msg) {
+    go.innerHTML = msg;
+    return;
+  }
   go.innerHTML = isActive ? `You go (${player})` : `Enemy go (${enemy_player})`;
 };
 
@@ -158,17 +175,32 @@ const handlerGo = (event) => {
   if (!isActive) {
     return;
   }
-  id = cell.id.split("_")[1];
+  id = cell.id.split("_").slice(1);
   moveSend(id);
 };
 
+const rerenderField = (field) => {
+  for (i = 0; i < 3; i++) {
+    for (j = 0; j < 3; j++) {
+      document.getElementById(`cell_${i}_${j}`).innerHTML =
+        field[i][j] == "-" ? "" : field[i][j];
+    }
+  }
+};
+
 const moveGame = (cellId, active) => {
-  const cell = document.getElementById(`cell_${cellId}`);
+  const cell = document.getElementById(`cell_${cellId[0]}_${cellId[1]}`);
   isActive = active;
   cell.style.cursor = "default";
   cell.removeEventListener("click", handlerGo);
-  cell.innerHTML = isActive ? enemy_player : player;
-  whoMove();
+};
+
+const removeListener = () => {
+  const cells = document.querySelectorAll(".cell");
+  for (let cell of cells) {
+    cell.removeEventListener("click", handlerGo);
+    cell.style.cursor = "default";
+  }
 };
 
 document.getElementById("create-game").addEventListener("click", createGame);
