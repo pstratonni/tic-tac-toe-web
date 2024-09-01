@@ -2,6 +2,7 @@ let player;
 let enemy_player;
 let isActive = false;
 let idGame;
+let joined;
 
 const ws = new WebSocket("ws://127.0.0.1:8000/ws");
 
@@ -37,14 +38,15 @@ ws.onmessage = function (event) {
       console.log(data.msg);
       break;
     case "draw":
+      console.log("draw")
       rerenderField(data.field);
-      moveGame(data.cell, data.active);
       whoMove("draw");
       break;
     case "win":
       rerenderField(data.field);
-      whoMove(`Win ${data.winner}`);
+      whoMove(data.winner);
       removeListener();
+      linelWin(...data.line);
     default:
       break;
   }
@@ -98,7 +100,6 @@ const initialGame = (idx, player_state, joined = "false") => {
 
   const finishButton = document.querySelector(".finish");
   finishButton.id = `finish_${joined}_${idx}`;
-
   if (player_state) {
     player =
       player_state == "X"
@@ -123,10 +124,19 @@ const finishGame = () => {
   const gameField = document.querySelector(".game");
   gameField.classList.remove("on");
   gameField.classList.add("off");
+  document.querySelector(".field").innerHTML = "";
+  const enemy_state = document.querySelector(".enemy-state");
+  enemy_state.innerHTML = "";
+  const go = document.querySelector(".go");
+  go.innerHTML = "";
+  document.querySelector("span").remove();
+  const span = document.createElement("span")
+  document.querySelector(".field-wrap").appendChild(span)
 };
 
 const renderField = () => {
   field = document.querySelector(".field");
+  field.innerHTML = ''
   for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
       cell = document.createElement("div");
@@ -162,9 +172,8 @@ const startGame = (player_state, enemy_player_state, active) => {
 
 const whoMove = (msg = "") => {
   const go = document.querySelector(".go");
-  go.innerHTML = "";
   if (msg) {
-    go.innerHTML = msg;
+    go.innerHTML = msg === "X" ? 'Win <i class="fas fa-times"></i>': `Win <i class="far fa-circle"></i>`;
     return;
   }
   go.innerHTML = isActive ? `You go (${player})` : `Enemy go (${enemy_player})`;
@@ -183,7 +192,7 @@ const rerenderField = (field) => {
   for (i = 0; i < 3; i++) {
     for (j = 0; j < 3; j++) {
       document.getElementById(`cell_${i}_${j}`).innerHTML =
-        field[i][j] == "-" ? "" : field[i][j];
+        field[i][j] === "-" ? "" : field[i][j] === "X" ?  '<i class="fas fa-times"></i>': '<i class="far fa-circle"></i>';
     }
   }
 };
@@ -194,6 +203,24 @@ const moveGame = (cellId, active) => {
   cell.style.cursor = "default";
   cell.removeEventListener("click", handlerGo);
 };
+
+const linelWin = (x, y) => {
+  const span = document.querySelector("span");
+  let marg = 100;
+  marg += 200 * y;
+  if (x === 0) {
+    span.classList.add("winH");
+    span.style.top = `${marg}px`;
+  } else if (x === 1) {
+    span.classList.add("winV");
+    span.style.left = `${marg}px`;
+  } else if (x === 2 && y === 0) {
+    span.classList.add("winDM");
+  } else {
+    span.classList.add("winDS");
+  }
+};
+
 
 const removeListener = () => {
   const cells = document.querySelectorAll(".cell");

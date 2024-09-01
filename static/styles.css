@@ -18,16 +18,20 @@ h1 {
   margin: 0 auto;
 }
 
-.field {
-  display: grid;
+.field-wrap{
+  position: relative;
   width: 602px;
   height: 602px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.field {
+  display: grid;
   border-radius: 50px;
   overflow: hidden;
   border: solid 1px wheat;
   grid-template-columns: auto auto auto;
-  margin: 0 auto;
-  margin-bottom: 20px;
 }
 
 .cell {
@@ -60,4 +64,49 @@ h1 {
 #state {
   display: flex;
   justify-content: space-around;
+}
+
+.winH {
+  display: block;
+  position: absolute;
+  width: 660px;
+  height: 6px;
+  left: -30px;
+  border-radius: 6px;
+  background-color: tomato;
+}
+.winV {
+  display: block;
+  position: absolute;
+  width: 6px;
+  height: 660px;
+  top: -30px;
+  border-radius: 6px;
+  background-color: tomato;
+}
+
+.winDM {
+  display: block;
+  position: absolute;
+  width: 870px;
+  height: 6px;
+  left: -10px;
+  top: -10px;
+  border-radius: 6px;
+  background-color: tomato;
+  transform: rotate(45deg);
+  transform-origin: left;
+}
+
+.winDS {
+  display: block;
+  position: absolute;
+  width: 870px;
+  height: 6px;
+  right: -10px;
+  top: -10px;
+  border-radius: 6px;
+  background-color: tomato;
+  transform: rotate(-45deg);
+  transform-origin: right;
 }

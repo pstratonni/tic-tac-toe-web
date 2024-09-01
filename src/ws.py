@@ -29,8 +29,6 @@ class WSGame(WebSocketEndpoint):
             self.current_games[number] = self.games[number]
             del self.games[number]
             await self.delete_player(ws)
-            ic(self.current_games)
-            ic(self.games)
             return True, number
         return False, None
 
@@ -109,13 +107,14 @@ class WSGame(WebSocketEndpoint):
                     await game.move(data['cell'])
 
                     players = await game.get_players()
-                    is_win, line = await game.check_winner()
-                    if is_win:
-                        for player in players:
-                            ws = await player.get_ws()
-                            await ws.send_json({'action': 'win', 'winner': game.current_player_state,
-                                                'line': line, 'field': game.field})
-                        return
+                    if game.steps > 4:
+                        is_win, line = await game.check_winner()
+                        if is_win:
+                            for player in players:
+                                ws = await player.get_ws()
+                                await ws.send_json({'action': 'win', 'winner': game.current_player_state,
+                                                    'line': line, 'field': game.field})
+                            return
 
                     if await game.check_draw():
                         for player in players:
