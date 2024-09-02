@@ -1,6 +1,16 @@
-h1 {
+body{
+  font-family: "Nerko One", cursive;
+  font-weight: 400;
+  font-style: normal;
+  background-color: rgb(186, 240, 240);
+}
+.title {
   font-size: 100px;
   margin: 0 auto;
+  width: 500px;
+  background-image: linear-gradient(to right, #27bda9, #dcee3f);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .off {
@@ -10,12 +20,96 @@ h1 {
   display: block;
 }
 
-.initial-game {
-  background-color: gray;
+.initial-game{
+  margin-left: 20px;
+}
+
+.initial-game h4{
+  font-size: 36px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  color: blue;
+}
+
+a{
+  border-radius: 10px;
+  background-color: #1899d6;
+  color: rgb(236, 198, 198);
+  border: none;
+  border-bottom: solid 3px transparent;
+  border-right: solid 3px transparent;
+  cursor: pointer;
+  font-size: 36px;
+  box-shadow: inset -3px -3px 9px rgba(255, 255, 255, 0.25),
+    inset 0px 3px 9px rgba(255, 255, 255, 0.3),
+    inset 0px 1px 1px rgba(255, 255, 255, 0.6),
+    inset 0px -8px 36px rgba(0, 0, 0, 0.3),
+    inset 0px 1px 5px rgba(255, 255, 255, 0.6), 2px 19px 31px rgba(0, 0, 0, 0.2);
+  background-image: radial-gradient(
+      93% 87% at 87% 89%,
+      rgba(0, 0, 0, 0.23) 0%,
+      transparent 86.18%
+    ),
+    radial-gradient(
+      66% 66% at 26% 20%,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0) 69.79%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    width: 270px;
+    height: 50px;
+    display: block;
+    text-align: center;
+}
+
+.game-list{
+  list-style: none;
+}
+
+li{
+  font-size: 24px;
+  color: #1899d6;
+}
+
+.game-button, .finish{
+  font-family: "Nerko One", cursive;
+  font-weight: 400;
+  font-style: normal;
+  border-radius: 10px;
+  background-color: #90f1bc;
+  color: rgb(90, 138, 118);
+  border: none;
+  border-bottom: solid 3px transparent;
+  border-right: solid 3px transparent;
+  cursor: pointer;
+  font-size: 24px;
+  box-shadow: inset -3px -3px 9px rgba(255, 255, 255, 0.25),
+    inset 0px 3px 9px rgba(255, 255, 255, 0.3),
+    inset 0px 1px 1px rgba(255, 255, 255, 0.6),
+    inset 0px -8px 36px rgba(0, 0, 0, 0.3),
+    inset 0px 1px 5px rgba(255, 255, 255, 0.6), 2px 19px 31px rgba(0, 0, 0, 0.2);
+  background-image: radial-gradient(
+      93% 87% at 87% 89%,
+      rgba(0, 0, 0, 0.23) 0%,
+      transparent 86.18%
+    ),
+    radial-gradient(
+      66% 66% at 26% 20%,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0) 69.79%,
+      rgba(255, 255, 255, 0) 100%
+    );
 }
 
 .game {
   margin: 0 auto;
+}
+
+.state-field{
+font-size: 24px;
+background-image: linear-gradient(to right, #e9e51a, #27bda9);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .field-wrap{
@@ -109,4 +203,51 @@ h1 {
   background-color: tomato;
   transform: rotate(-45deg);
   transform-origin: right;
+}
+
+.wrap-finish{
+  text-align: center;
+}
+
+.winner{
+  animation-name: victory;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  background-size: cover;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+@keyframes victory {
+  0% {
+    width: 0;
+    height: 0;
+  }
+  50% {
+    width: 600px;
+    height: 600px;
+  }
+  100% {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+.win{
+  background-image : url(win.jpg); 
+  background-color: #27bda9;
+}
+
+.lose{
+  background-image : url(lose.png);
+}
+
+.hiden{
+  display: none;
 }

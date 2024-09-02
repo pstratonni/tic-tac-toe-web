@@ -38,7 +38,6 @@ ws.onmessage = function (event) {
       console.log(data.msg);
       break;
     case "draw":
-      console.log("draw")
       rerenderField(data.field);
       whoMove("draw");
       break;
@@ -47,6 +46,7 @@ ws.onmessage = function (event) {
       whoMove(data.winner);
       removeListener();
       linelWin(...data.line);
+      renderWin(data.winner)
     default:
       break;
   }
@@ -132,6 +132,7 @@ const finishGame = () => {
   document.querySelector("span").remove();
   const span = document.createElement("span")
   document.querySelector(".field-wrap").appendChild(span)
+  document.querySelector(".winner").classList.add("hiden")
 };
 
 const renderField = () => {
@@ -172,6 +173,10 @@ const startGame = (player_state, enemy_player_state, active) => {
 
 const whoMove = (msg = "") => {
   const go = document.querySelector(".go");
+  if (msg === "draw"){
+    go.innerHTML = msg;
+    return
+  }
   if (msg) {
     go.innerHTML = msg === "X" ? 'Win <i class="fas fa-times"></i>': `Win <i class="far fa-circle"></i>`;
     return;
@@ -221,6 +226,16 @@ const linelWin = (x, y) => {
   }
 };
 
+const renderWin = (win) => {
+  win = win === "X" ? '<i class="fas fa-times"></i>': `<i class="far fa-circle"></i>`;
+  const winner = document.querySelector(".winner")
+  if (win === player){
+    winner.classList.add('win')
+  } else {
+    winner.classList.add('lose')
+  }
+  winner.classList.remove('hiden')
+}
 
 const removeListener = () => {
   const cells = document.querySelectorAll(".cell");

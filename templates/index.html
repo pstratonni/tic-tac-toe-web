@@ -10,29 +10,34 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <title>Tic-Tak-Toe</title>
-    <link rel="stylesheet" href="/static/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./static/styles.css" />
+        <title>Tic-Tak-Toe</title>
   </head>
   <body>
-    <h1>Tic-Tak-Toe</h1>
+    <h1 class="title">Tic-Tak-Toe</h1>
     <div class="initial-game">
-      <h4>Create new game</h4>
-      <button id="create-game">Create</button>
-      <h4>List of games</h4>
+      <h4><a id="create-game">Create new game</a></h4>
+      <h4>List of games :</h4>
       <ul class="game-list"></ul>
     </div>
     <div class="game">
       <div id="state">
-        <h5 class="state"></h5>
-        <h5 class="go"></h5>
-        <h5 class="enemy-state"></h5>
+        <h5 class="state state-field"></h5>
+        <h5 class="go state-field"></h5>
+        <h5 class="enemy-state state-field"></h5>
       </div>
       <div class="field-wrap">
         <div class="field"></div>
         <span></span>
+        <div class="winner hiden"></div>
       </div>
-      <div class="winner"></div>
-      <button class="finish">Finish</button>
+      
+      <div class="wrap-finish">
+        <button class="finish">Finish</button>
+      </div>
     </div>
     <script src="/static/script.js"></script>
   </body>
