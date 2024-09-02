@@ -69,6 +69,7 @@ a{
 li{
   font-size: 24px;
   color: #1899d6;
+  margin-bottom: 5px;
 }
 
 .game-button, .finish{
