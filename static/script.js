@@ -40,6 +40,7 @@ ws.onmessage = function (event) {
     case "draw":
       rerenderField(data.field);
       whoMove("draw");
+      renderWin("draw")
       break;
     case "win":
       rerenderField(data.field);
@@ -227,8 +228,13 @@ const linelWin = (x, y) => {
 };
 
 const renderWin = (win) => {
-  win = win === "X" ? '<i class="fas fa-times"></i>': `<i class="far fa-circle"></i>`;
   const winner = document.querySelector(".winner")
+  if (win === "draw"){
+    winner.classList.add('draw')
+    winner.classList.remove('hiden')
+    return
+  }
+  win = win === "X" ? '<i class="fas fa-times"></i>': `<i class="far fa-circle"></i>`;
   if (win === player){
     winner.classList.add('win')
   } else {

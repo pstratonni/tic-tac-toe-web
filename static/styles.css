@@ -241,12 +241,15 @@ background-image: linear-gradient(to right, #e9e51a, #27bda9);
 }
 
 .win{
-  background-image : url(win.jpg); 
-  background-color: #27bda9;
+  background-image : url(win.png); 
 }
 
 .lose{
   background-image : url(lose.png);
+}
+
+.draw{
+  background-image : url(neutral.png);
 }
 
 .hiden{
