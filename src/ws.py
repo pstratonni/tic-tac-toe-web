@@ -44,7 +44,6 @@ class WSGame(WebSocketEndpoint):
                                  'enemy_player': await self.current_games[number].player_att.get_state(),
                                  'active': True})
 
-
     async def check_game(self, ws: WebSocket, number: int) -> bool:
         game = self.current_games[number]
         if await game.player_init.check_ws(ws) or await game.player_att.check_ws(ws):

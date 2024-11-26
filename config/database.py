@@ -2,9 +2,11 @@ import os
 
 from databases import Database
 from sqlalchemy import create_engine, MetaData
+from starlette.config import Config
 
+config = Config('.env')
+DATABASE_URL = config('DATABASE_URL')
 
-DATABASE_URL = 'sqlite:///my.db'
 database = Database(DATABASE_URL)
 engine = create_engine(DATABASE_URL, connect_args={'check_same_thread': False})
 metadata = MetaData()

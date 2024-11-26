@@ -1,9 +1,24 @@
 from starlette.applications import Starlette
+from starlette.config import Config
+from starlette.middleware import Middleware
+from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from config.database import database, create_db
 from src.routes import routes
+from starlette.config import Config
 
-app = Starlette(debug=True, routes=routes)
+config = Config('.env')
+URL = config('URL')
+middleware = [
+    Middleware(
+        TrustedHostMiddleware,
+        allowed_hosts=[URL],
+    ),
+    Middleware(HTTPSRedirectMiddleware)
+]
+
+app = Starlette(debug=True, routes=routes, middleware=middleware)
 
 
 @app.on_event('startup')

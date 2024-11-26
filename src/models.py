@@ -2,6 +2,8 @@ from sqlalchemy import Table, Column, Integer, String
 
 from config.database import metadata
 
+
+
 players = Table(
     'players',
     metadata,

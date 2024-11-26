@@ -1,10 +1,11 @@
+const URL = '10.30.72.27'
 let player;
 let enemy_player;
 let isActive = false;
 let idGame;
 let joined;
 
-const ws = new WebSocket("ws://127.0.0.1:8000/ws");
+const ws = new WebSocket(`ws://${URL}/ws`);
 
 ws.onopen = function (event) {
   newUser();
@@ -134,6 +135,7 @@ const finishGame = () => {
   const span = document.createElement("span")
   document.querySelector(".field-wrap").appendChild(span)
   document.querySelector(".winner").classList.add("hiden")
+  document.querySelector(".winner").classList.remove('win', 'lose', 'draw')
 };
 
 const renderField = () => {
@@ -253,3 +255,6 @@ const removeListener = () => {
 
 document.getElementById("create-game").addEventListener("click", createGame);
 document.querySelector(".finish").addEventListener("click", breakGame);
+document.getElementById('sign_in').addEventListener('click', ()=>{
+ window.location.href = `http://${URL}/sign_in`
+  })

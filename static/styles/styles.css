@@ -31,7 +31,48 @@ body{
   color: blue;
 }
 
-a{
+.header{
+  display: flex;
+  justify-content: end;
+}
+
+.btn{
+  font-family: "Nerko One", cursive;
+  
+  font-weight: 400;
+  font-style: normal; 
+  border-radius: 12px;
+  background-color: #1899d6;
+  color: rgb(236, 198, 198);
+  border: none;
+  border-bottom: solid 3px transparent;
+  border-right: solid 3px transparent;
+  cursor: pointer;
+  font-size: 18px;
+  box-shadow: inset -3px -3px 9px rgba(255, 255, 255, 0.25),
+    inset 0px 3px 9px rgba(255, 255, 255, 0.3),
+    inset 0px 1px 1px rgba(255, 255, 255, 0.6),
+    inset 0px -8px 36px rgba(0, 0, 0, 0.3),
+    inset 0px 1px 5px rgba(255, 255, 255, 0.6), 2px 19px 31px rgba(0, 0, 0, 0.2);
+  background-image: radial-gradient(
+      93% 87% at 87% 89%,
+      rgba(0, 0, 0, 0.23) 0%,
+      transparent 86.18%
+    ),
+    radial-gradient(
+      66% 66% at 26% 20%,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0) 69.79%,
+      rgba(255, 255, 255, 0) 100%
+    );
+}
+
+.up{
+  background-color: rgb(186, 240, 240);
+  color: #1899d6;
+}
+
+.new-game{
   border-radius: 10px;
   background-color: #1899d6;
   color: rgb(236, 198, 198);
@@ -241,15 +282,15 @@ background-image: linear-gradient(to right, #e9e51a, #27bda9);
 }
 
 .win{
-  background-image : url(win.png); 
+  background-image : url(../win.jpg);
 }
 
 .lose{
-  background-image : url(lose.png);
+  background-image : url(../lose.png);
 }
 
 .draw{
-  background-image : url(neutral.png);
+  background-image : url(../neutral.png);
 }
 
 .hiden{
