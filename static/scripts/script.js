@@ -1,4 +1,4 @@
-const URL = '10.30.72.27'
+const URL = '192.168.178.23'
 let player;
 let enemy_player;
 let isActive = false;
@@ -258,3 +258,6 @@ document.querySelector(".finish").addEventListener("click", breakGame);
 document.getElementById('sign_in').addEventListener('click', ()=>{
  window.location.href = `http://${URL}/sign_in`
   })
+document.getElementById('sign_up').addEventListener('click', ()=>{
+  window.location.href = `http://${URL}/create`
+   })

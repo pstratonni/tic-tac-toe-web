@@ -13,12 +13,12 @@ URL = config('URL')
 middleware = [
     Middleware(
         TrustedHostMiddleware,
-        allowed_hosts=[URL],
+        allowed_hosts=['*'],
     ),
     Middleware(HTTPSRedirectMiddleware)
 ]
 
-app = Starlette(debug=True, routes=routes, middleware=middleware)
+app = Starlette(debug=True, routes=routes)
 
 
 @app.on_event('startup')
