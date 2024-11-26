@@ -1,5 +1,5 @@
 venv/
 .idea/
-_paycashe_/
+_pycashe_/
 .env
 *.db
