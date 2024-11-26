@@ -2,3 +2,4 @@ venv/
 .idea/
 _paycashe_/
 .env
+*.db
