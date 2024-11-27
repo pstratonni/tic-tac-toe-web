@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -10,22 +10,25 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/static/styles/styles.css" />
     <title>Tic-Tak-Toe</title>
   </head>
   <body>
-  <header class="header">
-    <div id="sign">
-      <button class="btn in" id="sign_in">Sign in</button>
-      <button class="btn up" id="sign_up">Sign up</button>
-    </div>
-    <div id="out">
-      <button class="btn out">Logout</button>
-    </div>
-  </header>
+    <header class="header">
+      <div id="sign" class="">
+        <button class="btn in" id="sign_in">Sign in</button>
+        <button class="btn up" id="sign_up">Sign up</button>
+      </div>
+      <div id="out" class="hidden">
+        <button class="btn out" id="logout">Logout</button>
+      </div>
+    </header>
     <h1 class="title">Tic-Tak-Toe</h1>
     <div class="initial-game">
       <h4><a id="create-game" class="new-game">Create new game</a></h4>
@@ -41,9 +44,9 @@
       <div class="field-wrap">
         <div class="field"></div>
         <span></span>
-        <div class="winner hiden"></div>
+        <div class="winner hidden"></div>
       </div>
-      
+
       <div class="wrap-finish">
         <button class="finish">Finish</button>
       </div>

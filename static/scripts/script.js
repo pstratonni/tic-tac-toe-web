@@ -1,57 +1,81 @@
-const URL = '192.168.178.23'
+const URL = "192.168.178.23";
 let player;
 let enemy_player;
 let isActive = false;
 let idGame;
 let joined;
-
 const ws = new WebSocket(`ws://${URL}/ws`);
+const main = () => {
+  ws.onopen = function (event) {
+    newUser();
+  };
 
-ws.onopen = function (event) {
-  newUser();
-};
+  ws.onmessage = function (event) {
+    const data = JSON.parse(event.data);
+    switch (data.action) {
+      case "new":
+        finishGame();
+        gameList(data.games);
+        break;
+      case "create":
+        initialGame(data.game, data.player);
+        renderField();
+        break;
+      case "join":
+        initialGame(data.game, (player = false), (joined = "true"));
+        renderField();
+        startGame(data.player, data.enemy_player, data.active);
+        break;
+      case "move":
+        rerenderField(data.field);
+        moveGame(data.cell, data.active);
+        whoMove();
+        break;
+      case "break":
+        finishGame();
+        gameList(data.games);
+      case "err":
+        console.log(data.msg);
+        break;
+      case "draw":
+        rerenderField(data.field);
+        whoMove("draw");
+        renderWin("draw");
+        break;
+      case "win":
+        rerenderField(data.field);
+        whoMove(data.winner);
+        removeListener();
+        linelWin(...data.line);
+        renderWin(data.winner);
+      default:
+        break;
+    }
+  };
+  document.addEventListener("DOMContentLoaded", ready);
+  document.getElementById("create-game").addEventListener("click", createGame);
+  document.querySelector(".finish").addEventListener("click", breakGame);
+  document.getElementById("sign_in").addEventListener("click", () => {
+    window.location.href = `http://${URL}/sign_in`;
+  });
+  document.getElementById("sign_up").addEventListener("click", () => {
+    window.location.href = `http://${URL}/create`;
+  });
 
-ws.onmessage = function (event) {
-  const data = JSON.parse(event.data);
-  switch (data.action) {
-    case "new":
-      finishGame();
-      gameList(data.games);
-      break;
-    case "create":
-      initialGame(data.game, data.player);
-      renderField();
-      break;
-    case "join":
-      initialGame(data.game, (player = false), (joined = "true"));
-      renderField();
-      startGame(data.player, data.enemy_player, data.active);
-      break;
-    case "move":
-      rerenderField(data.field);
-      moveGame(data.cell, data.active);
-      whoMove();
-      break;
-    case "break":
-      finishGame();
-      gameList(data.games);
-    case "err":
-      console.log(data.msg);
-      break;
-    case "draw":
-      rerenderField(data.field);
-      whoMove("draw");
-      renderWin("draw")
-      break;
-    case "win":
-      rerenderField(data.field);
-      whoMove(data.winner);
-      removeListener();
-      linelWin(...data.line);
-      renderWin(data.winner)
-    default:
-      break;
-  }
+  document.getElementById("logout").addEventListener("click", async () => {
+    const response = await fetch(`http://${URL}/log_out`, {
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: localStorage.getItem("id") }),
+    });
+    localStorage.clear;
+    document.getElementById("out").classList.add("hidden");
+    document.getElementById("sign").classList.remove("hidden");
+  });
 };
 
 const send = (data) => {
@@ -132,15 +156,15 @@ const finishGame = () => {
   const go = document.querySelector(".go");
   go.innerHTML = "";
   document.querySelector("span").remove();
-  const span = document.createElement("span")
-  document.querySelector(".field-wrap").appendChild(span)
-  document.querySelector(".winner").classList.add("hiden")
-  document.querySelector(".winner").classList.remove('win', 'lose', 'draw')
+  const span = document.createElement("span");
+  document.querySelector(".field-wrap").appendChild(span);
+  document.querySelector(".winner").classList.add("hidden");
+  document.querySelector(".winner").classList.remove("win", "lose", "draw");
 };
 
 const renderField = () => {
   field = document.querySelector(".field");
-  field.innerHTML = ''
+  field.innerHTML = "";
   for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
       cell = document.createElement("div");
@@ -176,12 +200,15 @@ const startGame = (player_state, enemy_player_state, active) => {
 
 const whoMove = (msg = "") => {
   const go = document.querySelector(".go");
-  if (msg === "draw"){
+  if (msg === "draw") {
     go.innerHTML = msg;
-    return
+    return;
   }
   if (msg) {
-    go.innerHTML = msg === "X" ? 'Win <i class="fas fa-times"></i>': `Win <i class="far fa-circle"></i>`;
+    go.innerHTML =
+      msg === "X"
+        ? 'Win <i class="fas fa-times"></i>'
+        : `Win <i class="far fa-circle"></i>`;
     return;
   }
   go.innerHTML = isActive ? `You go (${player})` : `Enemy go (${enemy_player})`;
@@ -200,7 +227,11 @@ const rerenderField = (field) => {
   for (i = 0; i < 3; i++) {
     for (j = 0; j < 3; j++) {
       document.getElementById(`cell_${i}_${j}`).innerHTML =
-        field[i][j] === "-" ? "" : field[i][j] === "X" ?  '<i class="fas fa-times"></i>': '<i class="far fa-circle"></i>';
+        field[i][j] === "-"
+          ? ""
+          : field[i][j] === "X"
+          ? '<i class="fas fa-times"></i>'
+          : '<i class="far fa-circle"></i>';
     }
   }
 };
@@ -230,20 +261,23 @@ const linelWin = (x, y) => {
 };
 
 const renderWin = (win) => {
-  const winner = document.querySelector(".winner")
-  if (win === "draw"){
-    winner.classList.add('draw')
-    winner.classList.remove('hiden')
-    return
+  const winner = document.querySelector(".winner");
+  if (win === "draw") {
+    winner.classList.add("draw");
+    winner.classList.remove("hidden");
+    return;
   }
-  win = win === "X" ? '<i class="fas fa-times"></i>': `<i class="far fa-circle"></i>`;
-  if (win === player){
-    winner.classList.add('win')
+  win =
+    win === "X"
+      ? '<i class="fas fa-times"></i>'
+      : `<i class="far fa-circle"></i>`;
+  if (win === player) {
+    winner.classList.add("win");
   } else {
-    winner.classList.add('lose')
+    winner.classList.add("lose");
   }
-  winner.classList.remove('hiden')
-}
+  winner.classList.remove("hidden");
+};
 
 const removeListener = () => {
   const cells = document.querySelectorAll(".cell");
@@ -253,11 +287,8 @@ const removeListener = () => {
   }
 };
 
-document.getElementById("create-game").addEventListener("click", createGame);
-document.querySelector(".finish").addEventListener("click", breakGame);
-document.getElementById('sign_in').addEventListener('click', ()=>{
- window.location.href = `http://${URL}/sign_in`
-  })
-document.getElementById('sign_up').addEventListener('click', ()=>{
-  window.location.href = `http://${URL}/create`
-   })
+const ready = () => {
+  
+}
+
+main();

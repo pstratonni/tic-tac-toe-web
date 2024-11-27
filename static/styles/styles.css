@@ -293,6 +293,6 @@ background-image: linear-gradient(to right, #e9e51a, #27bda9);
   background-image : url(../neutral.png);
 }
 
-.hiden{
+.hidden{
   display: none;
 }
