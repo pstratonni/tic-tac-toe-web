@@ -1,4 +1,4 @@
-const URL = "192.168.178.23";
+const URL = "10.30.72.27";
 let player;
 let enemy_player;
 let isActive = false;
@@ -72,9 +72,12 @@ const main = () => {
       },
       body: JSON.stringify({ id: localStorage.getItem("id") }),
     });
-    localStorage.clear;
-    document.getElementById("out").classList.add("hidden");
-    document.getElementById("sign").classList.remove("hidden");
+    if (response.status == 200){
+      localStorage.clear();
+      document.getElementById("out").classList.add("hidden");
+      document.getElementById("sign").classList.remove("hidden");
+    }
+    
   });
 };
 
@@ -287,8 +290,42 @@ const removeListener = () => {
   }
 };
 
-const ready = () => {
-  
+const ready = async () => {
+  if (localStorage.getItem('token') && localStorage.getItem('id')){
+    const response = await fetch(`http://${URL}/authorization`,{
+      method: "POST",
+      mode: "cors",
+      
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Credentials: `${localStorage.getItem('id')}`,
+      },
+    })
+    if (response.status == 401){
+      document.getElementById("out").classList.add("hidden");
+      document.getElementById("sign").classList.remove("hidden");
+      localStorage.clear()
+      return
+    }
+    if (response.status == 200){
+      data = await response.json()
+      for (let prop in data) {
+        localStorage.setItem(prop, data[prop]);
+      }
+
+      document.getElementById('username').innerHTML = localStorage.getItem('username')
+      document.getElementById('total').innerHTML = `total games:
+       ${localStorage.getItem('total_games')}`
+      document.getElementById('won').innerHTML = `games won: ${localStorage.getItem('games_won')}`
+      document.getElementById('draw').innerHTML = `draw: ${localStorage.getItem('draw')}`
+      document.getElementById("out").classList.remove("hidden");
+      document.getElementById("sign").classList.add("hidden");
+    }
+  }else{
+    document.getElementById("out").classList.add("hidden");
+    document.getElementById("sign").classList.remove("hidden");
+  }
 }
 
 main();

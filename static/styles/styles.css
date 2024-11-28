@@ -2,7 +2,7 @@ body{
   font-family: "Nerko One", cursive;
   font-weight: 400;
   font-style: normal;
-  background-color: rgb(186, 240, 240);
+  background-color: rgb(124, 171, 171);
 }
 .title {
   font-size: 100px;
@@ -34,11 +34,14 @@ body{
 .header{
   display: flex;
   justify-content: end;
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  height: 60px;
 }
 
 .btn{
   font-family: "Nerko One", cursive;
-  
+  height: 30px;
   font-weight: 400;
   font-style: normal; 
   border-radius: 12px;
@@ -70,6 +73,21 @@ body{
 .up{
   background-color: rgb(186, 240, 240);
   color: #1899d6;
+}
+
+.out{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.score{
+  display: flex;
+  width: 25%;
+  justify-content: space-between;
+  font-weight: 400;
+  font-size: 18px;
+  color: rgb(236, 198, 198);
 }
 
 .new-game{

@@ -6,7 +6,7 @@ from src.middleware import middleware
 from src.routes import routes
 
 app = Starlette(debug=True, routes=routes,
-                # middleware=middleware
+                middleware=middleware
                 )
 
 

@@ -1,4 +1,4 @@
-const URL = "192.168.178.23";
+const URL = "10.30.72.27";
 
 const createUser = async (event) => {
   event.preventDefault();
@@ -6,7 +6,6 @@ const createUser = async (event) => {
     const available = await validUsername(event.target[0].value);
 
     if (available.flag) {
-
       document.querySelector(".available").classList.remove("hidden");
       setTimeout(
         () => document.querySelector(".available").classList.add("hidden"),
@@ -30,7 +29,6 @@ const createUser = async (event) => {
     });
     if (response.status == 201) {
       const data = await response.json();
-
       for (let prop in data) {
         localStorage.setItem(prop, data[prop]);
       }
@@ -63,4 +61,4 @@ const validUsername = async (name) => {
   return await response.json();
 };
 
-document.getElementById("form").addEventListener("submit", createUser);
+document.getElementById("form_up").addEventListener("submit", createUser);

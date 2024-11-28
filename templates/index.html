@@ -16,17 +16,26 @@
       href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="/static/styles/normalize.css" />
     <link rel="stylesheet" href="/static/styles/styles.css" />
     <title>Tic-Tak-Toe</title>
   </head>
   <body>
     <header class="header">
       <div id="sign" class="">
-        <button class="btn in" id="sign_in">Sign in</button>
-        <button class="btn up" id="sign_up">Sign up</button>
+        <p>
+          <button class="btn in" id="sign_in">Sign in</button>
+          <button class="btn up" id="sign_up">Sign up</button>
+        </p>
       </div>
-      <div id="out" class="hidden">
-        <button class="btn out" id="logout">Logout</button>
+      <div id="out" class="out hidden">
+        <div class="score">
+          <p id="username"></p>
+          <p id="total"></p>
+          <p id="won"></p>
+          <p id="draw"></p>
+        </div>
+        <p><button class="btn logout" id="logout">Logout</button></p>
       </div>
     </header>
     <h1 class="title">Tic-Tak-Toe</h1>
