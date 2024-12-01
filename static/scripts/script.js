@@ -7,7 +7,7 @@ let joined;
 let username;
 const ws = new WebSocket(`ws://${URL}/ws`);
 const main = () => {
-  ws.onopen = function (event) {;
+  ws.onopen = function (event) {
     newUser();
   };
   ws.onmessage = function (event) {
@@ -15,7 +15,7 @@ const main = () => {
     switch (data.action) {
       case "new":
         finishGame();
-        gameList(data.games);
+        gameList(data.games, data.name_user_game);
         break;
       case "create":
         initialGame(data.game, data.player);
@@ -33,7 +33,7 @@ const main = () => {
         break;
       case "break":
         finishGame();
-        gameList(data.games);
+        gameList(data.games, data.name_user_game);
       case "err":
         console.log(data.msg);
         break;
@@ -81,18 +81,20 @@ const main = () => {
       localStorage.clear();
       document.getElementById("out").classList.add("hidden");
       document.getElementById("sign").classList.remove("hidden");
-      addName()
+      addName();
     }
   });
 
-  document.querySelector('.close_x').addEventListener("click", () => {
+  document.querySelector(".close_x").addEventListener("click", () => {
     document.getElementById("modal").classList.add("hidden");
-    document.getElementById('chk').checked = false;
-    const inputs = document.querySelectorAll("input[type='password'], input[type='text']")
-    for (let input of inputs){
-      input.value = ''
+    document.getElementById("chk").checked = false;
+    const inputs = document.querySelectorAll(
+      "input[type='password'], input[type='text']"
+    );
+    for (let input of inputs) {
+      input.value = "";
     }
-  })
+  });
 };
 
 const send = (data) => {
@@ -116,21 +118,25 @@ const moveSend = (id) => {
 };
 
 const addName = () => {
-  send({ action: "add_name", username: localStorage.getItem("username") })
-}
+  send({ action: "add_name", username: localStorage.getItem("username") });
+};
 
 const joinGame = (event) => {
   const id = event.target.id.split("_")[1];
   send({ action: "join", game: id });
 };
 
-const gameList = (games) => {
+const gameList = (games, name_user_game) => {
   const gameList = document.querySelector(".game-list");
   gameList.innerHTML = "";
   for (let i in games) {
     const li = `<li>Connection to <button id="game_${
       games[i]
-    }" class="game-button">Game #${+i + 1}</button></li>`;
+    }" class="game-button">${
+      name_user_game[games[i]] != "None"
+        ? name_user_game[games[i]] 
+        : ("Game #" + (+i + 1))
+    }</button></li>`;
     gameList.innerHTML += li;
   }
 
@@ -289,7 +295,7 @@ const renderWin = (win) => {
   if (win === "draw") {
     winner.classList.add("draw");
     winner.classList.remove("hidden");
-    ready()
+    ready();
     return;
   }
   win =
@@ -302,7 +308,7 @@ const renderWin = (win) => {
     winner.classList.add("lose");
   }
   winner.classList.remove("hidden");
-  ready()
+  ready();
 };
 
 const removeListener = () => {

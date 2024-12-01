@@ -5,9 +5,7 @@ from src.middleware import middleware
 
 from src.routes import routes
 
-app = Starlette(debug=True, routes=routes,
-                middleware=middleware
-                )
+app = Starlette(debug=True, routes=routes, middleware=middleware)
 
 
 @app.on_event('startup')
@@ -19,5 +17,3 @@ async def on_startup():
 @app.on_event('shutdown')
 async def on_shutdown():
     await database.disconnect()
-
-

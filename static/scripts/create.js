@@ -1,6 +1,5 @@
 const createUser = async (event) => {
   event.preventDefault();
-  console.log(event);
   
   if (event.target[1].value === event.target[2].value) {
     const available = await validUsername(event.target[0].value);

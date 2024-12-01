@@ -15,12 +15,14 @@ class WSGame(WebSocketEndpoint):
     encoding = 'json'
     actions = ['create', 'new', 'join', 'break', 'move', 'add_name']
     games = {}
+    name_user_game = {}
     current_games = {}
     users = []
 
     async def create_game(self, ws: WebSocket, username: str):
         game = await Game.create(ws, username)
         self.games[id(game)] = game
+        self.name_user_game[id(game)] = username
         await self.delete_player(ws)
         await ws.send_json(
             {'action': 'create', 'game': id(game), 'player': await game.player_init.get_state()})
@@ -31,6 +33,7 @@ class WSGame(WebSocketEndpoint):
         if flag:
             self.current_games[number] = self.games[number]
             del self.games[number]
+            del self.name_user_game[number]
             await self.delete_player(ws)
             return True, number
         return False, None
@@ -54,7 +57,8 @@ class WSGame(WebSocketEndpoint):
 
     async def add_player(self, ws: WebSocket, username: str):
         self.users.append({'ws': ws, 'username': username})
-        await ws.send_json({'action': 'new', 'games': list(self.games.keys())})
+        await ws.send_json(
+            {'action': 'new', 'games': list(self.games.keys()), 'name_user_game': self.name_user_game})
 
     async def delete_player(self, ws: WebSocket):
         for idx, player in enumerate(self.users):
@@ -65,6 +69,7 @@ class WSGame(WebSocketEndpoint):
 
     async def remove_game_from_list(self, number, ws: WebSocket, username: str):
         del self.games[number]
+        del self.name_user_game[number]
         await self.add_player(ws, username)
 
     async def remove_game_from_current(self, number, ws1: WebSocket, ws2: WebSocket, username1: str, username2: str):
@@ -88,7 +93,8 @@ class WSGame(WebSocketEndpoint):
                             break
                     await self.create_game(websocket, username)
                     for player in self.users:
-                        await player['ws'].send_json({'action': 'new', 'games': list(self.games.keys())})
+                        await player['ws'].send_json({'action': 'new', 'games': list(self.games.keys()),
+                                                      'name_user_game': self.name_user_game})
 
                 case 'join':
                     for player in self.users:
@@ -99,10 +105,12 @@ class WSGame(WebSocketEndpoint):
                     if flag:
                         await self.start_game(websocket, game)
                         for players_other in self.users:
-                            await players_other['ws'].send_json({'action': 'new', 'games': list(self.games.keys())})
+                            await players_other['ws'].send_json({'action': 'new', 'games': list(self.games.keys()),
+                                                                 'name_user_game': self.name_user_game})
                     else:
                         msg = 'Connection refused'
-                        await websocket.send_json({'action': 'new', 'games': list(self.games.keys()), 'msg': msg})
+                        await websocket.send_json({'action': 'new', 'games': list(self.games.keys()), 'msg': msg,
+                                                   'name_user_game': self.name_user_game})
 
                 case 'move':
                     number = int(data['game'])
@@ -163,7 +171,8 @@ class WSGame(WebSocketEndpoint):
                         username = await game.player_init.get_username()
                         await self.remove_game_from_list(int(data['game']), websocket, username)
                         for player in self.users:
-                            await player['ws'].send_json({'action': 'new', 'games': list(self.games.keys())})
+                            await player['ws'].send_json({'action': 'new', 'games': list(self.games.keys()),
+                                                          'name_user_game': self.name_user_game})
                     else:
                         idx = int(data['game'])
                         ws1 = await self.current_games[int(idx)].player_init.get_ws()
@@ -171,14 +180,15 @@ class WSGame(WebSocketEndpoint):
                         ws2 = await self.current_games[int(idx)].player_att.get_ws()
                         username2 = await self.current_games[int(idx)].player_att.get_username()
                         await self.remove_game_from_current(idx, ws1, ws2, username1, username2)
-                        await ws1.send_json({'action': 'break', 'games': list(self.games.keys())})
-                        await ws2.send_json({'action': 'break', 'games': list(self.games.keys())})
+                        await ws1.send_json({'action': 'break', 'games': list(self.games.keys()),
+                                             'name_user_game': self.name_user_game})
+                        await ws2.send_json({'action': 'break', 'games': list(self.games.keys()),
+                                             'name_user_game': self.name_user_game})
                 case 'add_name':
                     username = data['username']
                     for player in self.users:
                         if player['ws'] == websocket:
                             player['username'] = username
-                            # await websocket.send_json({'username': username})
                             break
 
                 case _:
@@ -196,8 +206,10 @@ class WSGame(WebSocketEndpoint):
         for key in keys:
             if await self.games[key].player_init.check_ws(websocket):
                 del self.games[key]
+                del self.name_user_game[key]
                 for player in self.users:
-                    await player['ws'].send_json({'action': 'new', 'games': list(self.games.keys())})
+                    await player['ws'].send_json({'action': 'new', 'games': list(self.games.keys()),
+                                                  'name_user_game': self.name_user_game})
                 return
 
         keys = list(self.current_games.keys())

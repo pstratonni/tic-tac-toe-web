@@ -1,4 +1,4 @@
-body{
+body {
   font-family: "Nerko One", cursive;
   font-weight: 400;
   font-style: normal;
@@ -7,7 +7,7 @@ body{
 .title {
   font-size: 100px;
   margin: 0 auto;
-  width: 500px;
+  width: 530px;
   background-image: linear-gradient(to right, #27bda9, #dcee3f);
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -20,18 +20,18 @@ body{
   display: block;
 }
 
-.initial-game{
+.initial-game {
   margin-left: 20px;
 }
 
-.initial-game h4{
+.initial-game h4 {
   font-size: 36px;
   margin-bottom: 5px;
   margin-top: 5px;
   color: blue;
 }
 
-.header{
+.header {
   display: flex;
   justify-content: end;
   background-color: rgba(0, 0, 0, 0.1);
@@ -39,11 +39,11 @@ body{
   height: 60px;
 }
 
-.btn{
+.btn {
   font-family: "Nerko One", cursive;
   height: 30px;
   font-weight: 400;
-  font-style: normal; 
+  font-style: normal;
   border-radius: 12px;
   background-color: #1899d6;
   color: rgb(236, 198, 198);
@@ -70,18 +70,18 @@ body{
     );
 }
 
-.up{
+.up {
   background-color: rgb(186, 240, 240);
   color: #1899d6;
 }
 
-.out{
+.out {
   display: flex;
   width: 100%;
   justify-content: space-between;
 }
 
-.score{
+.score {
   display: flex;
   width: 25%;
   justify-content: space-between;
@@ -90,7 +90,7 @@ body{
   color: rgb(236, 198, 198);
 }
 
-.new-game{
+.new-game {
   border-radius: 10px;
   background-color: #1899d6;
   color: rgb(236, 198, 198);
@@ -115,23 +115,24 @@ body{
       rgba(255, 255, 255, 0) 69.79%,
       rgba(255, 255, 255, 0) 100%
     );
-    width: 270px;
-    height: 50px;
-    display: block;
-    text-align: center;
+  width: 270px;
+  height: 50px;
+  display: block;
+  text-align: center;
 }
 
-.game-list{
+.game-list {
   list-style: none;
 }
 
-li{
+li {
   font-size: 24px;
   color: #1899d6;
   margin-bottom: 5px;
 }
 
-.game-button, .finish{
+.game-button,
+.finish {
   font-family: "Nerko One", cursive;
   font-weight: 400;
   font-style: normal;
@@ -165,14 +166,15 @@ li{
   margin: 0 auto;
 }
 
-.state-field{
-font-size: 24px;
-background-image: linear-gradient(to right, #e9e51a, #27bda9);
+.state-field {
+  font-size: 24px;
+  background-image: linear-gradient(to right, #e9e51a, #27bda9);
   background-clip: text;
+  margin-top: 0;
   -webkit-text-fill-color: transparent;
 }
 
-.field-wrap{
+.field-wrap {
   position: relative;
   width: 602px;
   height: 602px;
@@ -265,11 +267,11 @@ background-image: linear-gradient(to right, #e9e51a, #27bda9);
   transform-origin: right;
 }
 
-.wrap-finish{
+.wrap-finish {
   text-align: center;
 }
 
-.winner{
+.winner {
   animation-name: victory;
   animation-duration: 1s;
   animation-fill-mode: forwards;
@@ -299,18 +301,18 @@ background-image: linear-gradient(to right, #e9e51a, #27bda9);
   }
 }
 
-.win{
-  background-image : url(../win.jpg);
+.win {
+  background-image: url(../win.jpg);
 }
 
-.lose{
-  background-image : url(../lose.png);
+.lose {
+  background-image: url(../lose.png);
 }
 
-.draw{
-  background-image : url(../neutral.png);
+.draw {
+  background-image: url(../neutral.png);
 }
 
-.hidden{
+.hidden {
   display: none;
 }

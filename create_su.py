@@ -4,12 +4,13 @@ import getpass
 from sqlalchemy import insert, select
 from starlette_auth_toolkit.cryptography import PBKDF2Hasher
 
-from config.database import database
+from config.database import database, create_db
 from src.models import players
 
 
 async def create_superuser():
     await database.connect()
+    create_db()
     username = input("Enter username:  ")
     while True:
         password = getpass.getpass("Enter password:  ")
