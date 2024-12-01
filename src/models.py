@@ -13,6 +13,6 @@ players = Table(
     Column('password', String, nullable=False),
     Column('token', String, nullable=True),
     Column('expiry_date', DateTime, nullable=True),
-    Column('is_superuser', Boolean, server_default=text('0'))
+    Column('is_superuser', Boolean, server_default=text('FALSE'))
 )
 

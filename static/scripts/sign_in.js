@@ -1,4 +1,3 @@
-
 document.getElementById("form_in").addEventListener("submit", async (event) => {
   event.preventDefault();
   const user = {
@@ -9,7 +8,6 @@ document.getElementById("form_in").addEventListener("submit", async (event) => {
   const response = await fetch(`http://${URL}/sign_in`, {
     method: "POST",
     mode: "cors",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -20,7 +18,9 @@ document.getElementById("form_in").addEventListener("submit", async (event) => {
   for (let prop in data) {
     localStorage.setItem(prop, data[prop]);
   }
-  window.location.href = `http://${URL}`;
+  document.getElementById("modal").classList.add("hidden");
+  await ready()
+  addName()
   }else{
     document.querySelector(".not-exist").classList.remove("hidden");
     event.target[0].value = event.target[1].value = "";
@@ -31,11 +31,3 @@ document.getElementById("form_in").addEventListener("submit", async (event) => {
     return;
   }
 });
-
-document.addEventListener('DOMContentLoaded', (event) => {
-  if (window.location.pathname === '/sign_in'){
-    document.getElementById('chk').click()
-    
-  }
-  
-})

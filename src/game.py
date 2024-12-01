@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from icecream import ic
 from starlette.websockets import WebSocket
 from enum import StrEnum
@@ -11,9 +9,10 @@ class State(StrEnum):
 
 
 class Player:
-    def __init__(self, ws: WebSocket, state: State = State.CROSS) -> None:
+    def __init__(self, ws: WebSocket, username: str, state: State = State.CROSS) -> None:
         self.__ws = ws
         self.__state = state
+        self.__username = username
 
     async def get_state(self) -> State:
         return self.__state
@@ -24,14 +23,16 @@ class Player:
     async def check_ws(self, ws: WebSocket) -> bool:
         return self.__ws == ws
 
+    async def get_username(self) -> str:
+        return self.__username
+
 
 class Game:
 
-
     @classmethod
-    async def create(cls, ws: WebSocket):
+    async def create(cls, ws: WebSocket, username: str):
         self = cls()
-        self.player_init = await self.create_player(ws)
+        self.player_init = await self.create_player(ws, username)
         self.current_player = await self.player_init.get_ws()
         self.active_game = False
         self.player_att = None
@@ -57,8 +58,8 @@ class Game:
     # async def get_state_init(self):
     #     self.current_player = await self.player_init.get_state()
 
-    async def create_player(self, ws: WebSocket, state: State = State.CROSS) -> Player:
-        return Player(ws, state)
+    async def create_player(self, ws: WebSocket, username: str, state: State = State.CROSS) -> Player:
+        return Player(ws, username, state)
 
     async def toggle_current_player(self, ws: WebSocket):
         current_player = self.player_init \
@@ -67,10 +68,10 @@ class Game:
         self.current_player = await current_player.get_ws()
         self.current_player_state = await current_player.get_state()
 
-    async def join_player(self, ws: WebSocket) -> bool:
+    async def join_player(self, ws: WebSocket, username: str) -> bool:
         if not await self.player_init.check_ws(ws) and \
                 self.player_att is None:
-            self.player_att = await self.create_player(ws, State.ZERO)
+            self.player_att = await self.create_player(ws, username, State.ZERO)
             self.active_game = True
             return True
         else:

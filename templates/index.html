@@ -10,14 +10,16 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> -->
     <link
       href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap"
       rel="stylesheet"
     />
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/styles/normalize.css" />
     <link rel="stylesheet" href="/static/styles/styles.css" />
+    <link rel="stylesheet" type="text/css" href="/static/styles/styles_su.css">
     <title>Tic-Tak-Toe</title>
   </head>
   <body>
@@ -60,6 +62,36 @@
         <button class="finish">Finish</button>
       </div>
     </div>
+    <section class="hidden" id="modal">
+      <div class="main">  	
+        <div class="close_x">x</div>
+        <input type="checkbox" id="chk" aria-hidden="true">
+    
+          <div class="signup">
+            <form id="form_up">
+              <label for="chk" aria-hidden="true">Sign up</label>
+              <input type="text" name="txt" placeholder="User name" required="" class="user_name">
+                        <div class="available hidden">Name not available</div>
+              <input type="password" name="pswd" placeholder="Password" required="">
+              <input type="password" name="pswd" placeholder="Confirm your password" required="">
+                        <div class="confirm hidden">Passwords do not match</div>
+              <button type="submit" class="button">Sign up</button>
+            </form>
+          </div>
+    
+          <div class="login">
+            <form id="form_in">
+              <label for="chk" aria-hidden="true">Login</label>
+              <input type="text" name="name" placeholder="User name" required="">
+              <input type="password" name="pswd" placeholder="Password" required="">
+                        <div class="not-exist hidden">User or password does't exist</div>
+              <button type="submit " class="button">Login</button>
+            </form>
+          </div>
+      </div>
+    </section>
     <script src="/static/scripts/script.js"></script>
+    <script src="static/scripts/create.js"></script>
+    <script src="static/scripts/sign_in.js"></script>
   </body>
 </html>

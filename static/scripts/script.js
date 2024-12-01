@@ -1,15 +1,15 @@
-const URL = "10.30.72.27";
+const URL = "192.168.178.23";
 let player;
 let enemy_player;
 let isActive = false;
 let idGame;
 let joined;
+let username;
 const ws = new WebSocket(`ws://${URL}/ws`);
 const main = () => {
-  ws.onopen = function (event) {
+  ws.onopen = function (event) {;
     newUser();
   };
-
   ws.onmessage = function (event) {
     const data = JSON.parse(event.data);
     switch (data.action) {
@@ -46,20 +46,25 @@ const main = () => {
         rerenderField(data.field);
         whoMove(data.winner);
         removeListener();
-        linelWin(...data.line);
+        lineWin(...data.line);
         renderWin(data.winner);
       default:
         break;
     }
   };
   document.addEventListener("DOMContentLoaded", ready);
+
   document.getElementById("create-game").addEventListener("click", createGame);
+
   document.querySelector(".finish").addEventListener("click", breakGame);
+
   document.getElementById("sign_in").addEventListener("click", () => {
-    window.location.href = `http://${URL}/sign_in`;
+    document.getElementById("modal").classList.remove("hidden");
+    document.getElementById("chk").click();
   });
+
   document.getElementById("sign_up").addEventListener("click", () => {
-    window.location.href = `http://${URL}/create`;
+    document.getElementById("modal").classList.remove("hidden");
   });
 
   document.getElementById("logout").addEventListener("click", async () => {
@@ -72,13 +77,22 @@ const main = () => {
       },
       body: JSON.stringify({ id: localStorage.getItem("id") }),
     });
-    if (response.status == 200){
+    if (response.status == 200) {
       localStorage.clear();
       document.getElementById("out").classList.add("hidden");
       document.getElementById("sign").classList.remove("hidden");
+      addName()
     }
-    
   });
+
+  document.querySelector('.close_x').addEventListener("click", () => {
+    document.getElementById("modal").classList.add("hidden");
+    document.getElementById('chk').checked = false;
+    const inputs = document.querySelectorAll("input[type='password'], input[type='text']")
+    for (let input of inputs){
+      input.value = ''
+    }
+  })
 };
 
 const send = (data) => {
@@ -86,7 +100,11 @@ const send = (data) => {
 };
 
 const newUser = () => {
-  send({ action: "new" });
+  if (localStorage.getItem("username")) {
+    send({ action: "new", username: localStorage.getItem("username") || null });
+    return;
+  }
+  send({ action: "new", username: null });
 };
 
 const createGame = (event) => {
@@ -96,6 +114,10 @@ const createGame = (event) => {
 const moveSend = (id) => {
   send({ action: "move", cell: id, game: idGame });
 };
+
+const addName = () => {
+  send({ action: "add_name", username: localStorage.getItem("username") })
+}
 
 const joinGame = (event) => {
   const id = event.target.id.split("_")[1];
@@ -149,7 +171,6 @@ const finishGame = () => {
   const createField = document.querySelector(".initial-game");
   createField.classList.remove("off");
   createField.classList.add("on");
-
   const gameField = document.querySelector(".game");
   gameField.classList.remove("on");
   gameField.classList.add("off");
@@ -246,7 +267,7 @@ const moveGame = (cellId, active) => {
   cell.removeEventListener("click", handlerGo);
 };
 
-const linelWin = (x, y) => {
+const lineWin = (x, y) => {
   const span = document.querySelector("span");
   let marg = 100;
   marg += 200 * y;
@@ -268,6 +289,7 @@ const renderWin = (win) => {
   if (win === "draw") {
     winner.classList.add("draw");
     winner.classList.remove("hidden");
+    ready()
     return;
   }
   win =
@@ -280,6 +302,7 @@ const renderWin = (win) => {
     winner.classList.add("lose");
   }
   winner.classList.remove("hidden");
+  ready()
 };
 
 const removeListener = () => {
@@ -291,41 +314,47 @@ const removeListener = () => {
 };
 
 const ready = async () => {
-  if (localStorage.getItem('token') && localStorage.getItem('id')){
-    const response = await fetch(`http://${URL}/authorization`,{
+  if (localStorage.getItem("token") && localStorage.getItem("id")) {
+    const response = await fetch(`http://${URL}/authorization`, {
       method: "POST",
       mode: "cors",
-      
+
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-        Credentials: `${localStorage.getItem('id')}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Credentials: `${localStorage.getItem("id")}`,
       },
-    })
-    if (response.status == 401){
+    });
+
+    if (response.status == 401) {
       document.getElementById("out").classList.add("hidden");
       document.getElementById("sign").classList.remove("hidden");
-      localStorage.clear()
-      return
+      localStorage.clear();
+      return;
     }
-    if (response.status == 200){
-      data = await response.json()
+    if (response.status == 200) {
+      data = await response.json();
       for (let prop in data) {
         localStorage.setItem(prop, data[prop]);
       }
 
-      document.getElementById('username').innerHTML = localStorage.getItem('username')
-      document.getElementById('total').innerHTML = `total games:
-       ${localStorage.getItem('total_games')}`
-      document.getElementById('won').innerHTML = `games won: ${localStorage.getItem('games_won')}`
-      document.getElementById('draw').innerHTML = `draw: ${localStorage.getItem('draw')}`
+      document.getElementById("username").innerHTML =
+        localStorage.getItem("username");
+      document.getElementById("total").innerHTML = `total games:
+       ${localStorage.getItem("total_games")}`;
+      document.getElementById(
+        "won"
+      ).innerHTML = `games won: ${localStorage.getItem("games_won")}`;
+      document.getElementById("draw").innerHTML = `draw: ${localStorage.getItem(
+        "draw"
+      )}`;
       document.getElementById("out").classList.remove("hidden");
       document.getElementById("sign").classList.add("hidden");
     }
-  }else{
+  } else {
     document.getElementById("out").classList.add("hidden");
     document.getElementById("sign").classList.remove("hidden");
   }
-}
+};
 
 main();

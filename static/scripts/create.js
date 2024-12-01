@@ -1,7 +1,7 @@
-const URL = "10.30.72.27";
-
 const createUser = async (event) => {
   event.preventDefault();
+  console.log(event);
+  
   if (event.target[1].value === event.target[2].value) {
     const available = await validUsername(event.target[0].value);
 
@@ -32,11 +32,13 @@ const createUser = async (event) => {
       for (let prop in data) {
         localStorage.setItem(prop, data[prop]);
       }
-      window.location.href = `http://${URL}`;
-    }else{
-        console.log('bad request');
-        
+      document.getElementById("modal").classList.add("hidden");
+      await ready()
+      addName();
+    } else {
+      console.log("bad request");
     }
+    event.target[1].value = event.target[2].value = event.target[0].value =  ""
   } else {
     document.querySelector(".confirm").classList.remove("hidden");
     event.target[1].value = event.target[2].value = "";
