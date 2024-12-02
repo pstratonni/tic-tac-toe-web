@@ -17,7 +17,7 @@ const createUser = async (event) => {
       username: event.target[0].value,
       password: event.target[1].value,
     };
-    const response = await fetch(`http://${URL}/create`, {
+    const response = await fetch(`${URL}/create`, {
       method: "POST",
       mode: "cors",
       credentials: "include",
@@ -50,7 +50,7 @@ const createUser = async (event) => {
 };
 
 const validUsername = async (name) => {
-  const response = await fetch(`http://${URL}/available`, {
+  const response = await fetch(`${URL}/available`, {
     method: "POST",
     mode: "cors",
     credentials: "include",

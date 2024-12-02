@@ -5,7 +5,7 @@ document.getElementById("form_in").addEventListener("submit", async (event) => {
     password: event.target[1].value,
   };
 
-  const response = await fetch(`http://${URL}/sign_in`, {
+  const response = await fetch(`${URL}/sign_in`, {
     method: "POST",
     mode: "cors",
     headers: {

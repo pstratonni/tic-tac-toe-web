@@ -1,11 +1,12 @@
-const URL = "192.168.178.23";
+const URL = "http://192.168.178.23";
+const URL_WS = "192.168.178.23";
 let player;
 let enemy_player;
 let isActive = false;
 let idGame;
 let joined;
 let username;
-const ws = new WebSocket(`ws://${URL}/ws`);
+const ws = new WebSocket(`ws://${URL_WS}/ws`);
 const main = () => {
   ws.onopen = function (event) {
     newUser();
@@ -68,7 +69,7 @@ const main = () => {
   });
 
   document.getElementById("logout").addEventListener("click", async () => {
-    const response = await fetch(`http://${URL}/log_out`, {
+    const response = await fetch(`${URL}/log_out`, {
       method: "POST",
       mode: "cors",
       credentials: "include",
@@ -321,7 +322,7 @@ const removeListener = () => {
 
 const ready = async () => {
   if (localStorage.getItem("token") && localStorage.getItem("id")) {
-    const response = await fetch(`http://${URL}/authorization`, {
+    const response = await fetch(`${URL}/authorization`, {
       method: "POST",
       mode: "cors",
 
