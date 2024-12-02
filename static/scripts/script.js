@@ -1,4 +1,5 @@
 const URL = "http://192.168.178.23";
+
 const URL_WS = "192.168.178.23";
 let player;
 let enemy_player;
