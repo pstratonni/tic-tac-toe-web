@@ -1,13 +1,13 @@
-const URL = "http://192.168.178.23";
+const URL = "http://10.30.72.27";
 
-const URL_WS = "192.168.178.23";
+const URL_WS = "ws://10.30.72.27";
 let player;
 let enemy_player;
 let isActive = false;
 let idGame;
 let joined;
 let username;
-const ws = new WebSocket(`ws://${URL_WS}/ws`);
+const ws = new WebSocket(`${URL_WS}/ws`);
 const main = () => {
   ws.onopen = function (event) {
     newUser();

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from icecream import ic
 from sqlalchemy import select
 from starlette.authentication import AuthenticationBackend, AuthCredentials, SimpleUser, AuthenticationError
@@ -27,7 +29,7 @@ class AuthMiddleware(AuthenticationBackend):
         query = select(players.c.token, players.c.username, players.c.expiry_date).where(
             players.c.id == int(credentials))
         data = await database.fetch_one(query)
-        if data is None or token != data['token']:
+        if data is None or token != data['token'] or (data['expiry_date'] < datetime.now()):
             raise AuthenticationError('invalid token')
         return AuthCredentials(["authenticated"]), SimpleUser(data['username'])
 
